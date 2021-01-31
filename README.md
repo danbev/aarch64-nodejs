@@ -21,6 +21,32 @@ $ docker run --rm -ti arm64v8/fedora uname -m
 aarch64
 ```
 
+### Build a container
+```console
+$ docker build -t aarch64-nodejs .
+```
+
+### Running the container
+```console
+$ docker run -ti aarch64-nodejs bash
+```
+
+Cloning a specific version/tag of Node.js:
+```console
+$ git clone --depth 1 --branch v14.15.4 https://github.com/nodejs/node.git node
+$ cd node
+$ ./configure && make -j8
+```
+
+### Testing yarn
+This was actually the purpose of this repo to test an issue when running
+yarn.
+```console
+$ npm install -g yarn
+$ mkdir yarn-test && cd yarn-test
+$ yarn init 
+```
+
 ### Troubleshooting
 I'm not sure how I managed to get my system into this state but somehow
 I was not able to install qemu-user-static:
