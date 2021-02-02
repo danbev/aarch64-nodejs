@@ -38,13 +38,39 @@ $ cd node
 $ ./configure && make -j8
 ```
 
+### Tagging and pushing to docker hub
+```console
+$ docker login -u <username>
+$ docker tag aarch64-node-14.15.4 dbevenius/aarch64-node:14.15.4
+$ docker push dbevenius/aarch64-node:14.15.4
+```
+
 ### Testing yarn
 This was actually the purpose of this repo to test an issue when running
 yarn.
 ```console
-$ npm install -g yarn
+[root@5fde00944ba7 node]# uname -m
+aarch64
+
+$ export PATH=/node:$PATH
+$ node --version
+v14.15.4
+
+$ /node/deps/npm/bin/npm-cli.js --version
+6.14.10
+
 $ mkdir yarn-test && cd yarn-test
-$ yarn init 
+$ /node/deps/npm/bin/npm-cli.js init
+$ /node/deps/npm/bin/npm-cli.js  install -g yarn --unsafe-perm
+$ /node/out/bin/yarn init 
+$ /node/out/bin/yarn install
+yarn install v1.22.10
+[1/4] Resolving packages...
+success Already up-to-date.
+Done in 3.11s.
+/node/out/bin/yarn list
+...
+Done in 3.53s.
 ```
 
 ### Troubleshooting
