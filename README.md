@@ -72,6 +72,37 @@ Done in 3.11s.
 ...
 Done in 3.53s.
 ```
+Now I want to try the same using a binary of Node:
+```console
+$ mkdir binary-node
+$ cd binary-node/
+$ curl https://nodejs.org/dist/v14.15.4/node-v14.15.4-linux-arm64.tar.gz | tar xpfz -
+$ cd node-v14.15.4-linux-arm64/
+$ export PATH=$PWD/bin:$PATH
+$ which node
+/node/binary-node/node-v14.15.4-linux-arm64/bin/node
+$ mkdir sample
+$ cd sample
+$ npm init
+$ npm install -g yarn --unsafe-perm
+$ yarn add lodash
+yarn add v1.22.10
+info No lockfile found.
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 1 new dependency.
+info Direct dependencies
+└─ lodash@4.17.20
+info All dependencies
+└─ lodash@4.17.20
+Done in 14.88s.
+[root@5fde00944ba7 sample]#
+```
+And that also works.
+
 
 ### Troubleshooting
 I'm not sure how I managed to get my system into this state but somehow
@@ -114,4 +145,39 @@ I turned out I had a /usr/bin/qemu-arm-static:
 $ sudo rm -rf /usr/bin/qemu-arm-static
 ```
 
+### AWS
+For this I created and launched a new instance using RHEL 8 and arm64.
+```console
+$ ssh -i path_to_aws_key ec2-user@public_dns
+```
+Install utils and build node:
+```console
+$ sudo dnf install -y git gcc-c++ which make python3 openssl-devel procps-ng
+$ git clone --depth 1 --branch v14.15.4 https://github.com/nodejs/node.git node
+$ cd node
+$ ./configure --debug && make -j2
+```
+
+Using Node.js binary on Centos aarch64
+```console
+$ ssh -i path_to_aws_key centos@public_ip
+$ uname -a
+Linux 4.18.0-193.6.3.el8_2.aarch64 #1 SMP Wed Jun 10 11:10:40 UTC 2020 aarch64 aarch64 aarch64 GNU/Linux
+$ curl https://nodejs.org/dist/v14.15.4/node-v14.15.4-linux-arm64.tar.gz | tar xpfz -
+$ cd node-v14.15.4-linux-arm64/
+$ export PATH=$PWD/bin:$PATH
+$ node --version
+v14.15.4
+$ npm --version
+6.14.10
+$ mkdir tmp && cd tmp
+$ npm install -g yarn
+$ npm init
+$ yarn add lodash
+yarn add v1.22.10
+info No lockfile found.
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[-] 0/1Segmentation fault (core dumped)
+```
 
